@@ -1,5 +1,4 @@
 // Add new comment to test webhook
-// Add another line of comment to test GitHub webhook.
 package com.mycompany.orderapp;
 
 public class App {

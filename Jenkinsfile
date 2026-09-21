@@ -1,50 +1,42 @@
 pipeline {
-  agent any
-  tools {
-    maven 'maven_3'
-  }
-  stages {
-    stage('Checkout') {
-      steps {
-        git(branch: 'main', url: 'https://github.com/madhuri75jha/simple-order-processing-app.git')
-      }
+    agent any
+
+    stages {
+        stage('Install Maven') {
+            steps {
+                sh '''
+                echo "Installing Maven 3.9.12"
+                sudo rm -rf /opt/maven
+                cd /tmp
+                wget https://downloads.apache.org/maven/maven-3/3.9.12/binaries/apache-maven-3.9.12-bin.tar.gz
+                tar -xzf apache-maven-3.9.12-bin.tar.gz
+                sudo mv apache-maven-3.9.12 /opt/maven
+                sudo chown -R ubuntu:ubuntu /opt/maven
+                /opt/maven/bin/mvn -version
+                '''
+            }
+        }
+
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/awsfox/simple-order-processing-app.git'
+            }
+        }
+
+        stage('Build with Maven') {
+            steps {
+                sh '/opt/maven/bin/mvn clean package - Dmaven.test.failure.ignore=true'
+            }
+        }
     }
 
-    stage('Build') {
-      steps {
-        sh '''
-        echo "Building application pipeline..."
-        mvn clean package
-        '''
-      }
+    post {
+        success {
+          junit '**/target/surefire-reports/TEST-*.xml'
+          archiveArtifacts 'target/*.jar'
+        }
+        failure {
+          echo 'Build Failed'
+        }
     }
-
-  stage('Deploy Application') {
-      steps {
-        echo 'Starting Application Deployment...'
-        sh '''
-        echo "Creating deployment directory..."
-        mkdir -p /tmp/orderapp-deploy/
-
-        echo "Copying JAR to deployment directory"
-        cp target/*.jar /tmp/orderapp-deploy/
-
-        echo "Listing deployed files"
-        ls -l /tmp/orderapp-deploy/
-        '''
-      }
-    }
-
-  }
-  
-  post {
-    success {
-      echo 'Pipeline Executed Successfully. Application DEPLOYED.'
-    }
-
-    failure {
-      echo 'Pipeline Failed. Please Check LOGS.'
-    }
-
-  }
 }

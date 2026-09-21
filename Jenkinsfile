@@ -4,7 +4,7 @@ pipeline {
     environment {
         MAVEN_VERSION = '3.9.16'
         MAVEN_HOME = '/opt/maven'
-        PATH = '/opt/maven/bin:${env.PATH}'
+        PATH = "/opt/maven/bin:${env.PATH}"
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
                 tar -xzf apache-maven-${MAVEN_VERSION}-bin.tar.gz
                 sudo mv apache-maven-${MAVEN_VERSION} /opt/maven
                 sudo chown -R ubuntu:ubuntu /opt/maven
-                /opt/maven/bin/mvn -version
+                mvn -version
                 '''
             }
         }

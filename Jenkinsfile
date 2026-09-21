@@ -5,12 +5,12 @@ pipeline {
         stage('Install Maven') {
             steps {
                 sh '''
-                echo "Installing Maven 3.9.12"
+                echo "Installing Maven 3.9.16"
                 sudo rm -rf /opt/maven
                 cd /tmp
                 wget https://downloads.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.tar.gz
-                tar -xzf apache-maven-3.9.12-bin.tar.gz
-                sudo mv apache-maven-3.9.12 /opt/maven
+                tar -xzf apache-maven-3.9.16-bin.tar.gz
+                sudo mv apache-maven-3.9.16 /opt/maven
                 sudo chown -R ubuntu:ubuntu /opt/maven
                 /opt/maven/bin/mvn -version
                 '''

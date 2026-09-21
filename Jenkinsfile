@@ -25,7 +25,7 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh '/opt/maven/bin/mvn clean package - Dmaven.test.failure.ignore=true'
+                sh '/opt/maven/bin/mvn clean package -Dmaven.test.failure.ignore=true'
             }
         }
     }
